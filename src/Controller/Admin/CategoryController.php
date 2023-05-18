@@ -34,7 +34,10 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('admin/category/new.html.twig', [
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('admin/category/new.html.twig', [
+            'categories'=>$categories,
             'category' => $category,
             'form' => $form,
         ]);
@@ -59,8 +62,10 @@ class CategoryController extends AbstractController
 
             return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }
+        $categories = $categoryRepository->findAll();
 
-        return $this->renderForm('admin/category/edit.html.twig', [
+        return $this->render('admin/category/edit.html.twig', [
+            'categories'=>$categories,
             'category' => $category,
             'form' => $form,
         ]);
