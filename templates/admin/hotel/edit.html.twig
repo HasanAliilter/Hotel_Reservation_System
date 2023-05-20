@@ -1,9 +1,8 @@
 {% extends 'adminbase.html.twig' %}
 
-{% block title %}New Category{% endblock %}
+{% block title %}Edit Hotel{% endblock %}
 
 {% block body %}
-
       <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -11,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>New Category Page</h1>
+            <h1>Edit Hotel Page</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-              <li class="breadcrumb-item active">New Category</li>
+              <li class="breadcrumb-item active">Edit Hotel</li>
             </ol>
           </div>
         </div>
@@ -41,15 +40,22 @@
         </div>
         <div class="card-body">
 
-
-    {{ include('admin/category/_form.html.twig') }}
+            
+    <hr>
+    {{ include('admin/hotel/_form.html.twig', {'button_label': 'Update'}) }}
+    <hr>
+    <div class="col-md-2">
+      <a href="{{ path('app_admin_hotel_index') }}" class="btn btn-block btn-primary">back to list</a>
+    </div>
+    
 
     <hr>
     <div class="col-md-2">
-      <a href="{{ path('app_category_index') }}" class="btn btn-block btn-primary">back to list</a>
+      {{ include('admin/hotel/_delete_form.html.twig') }}
     </div>
 
-</div>
+
+    </div>
         <!-- /.card-body -->
         <div class="card-footer">
           Footer
@@ -63,4 +69,6 @@
   </div>
   <!-- /.content-wrapper -->
 
+    
 {% endblock %}
+

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -36,6 +38,14 @@ class Category
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Hotel::class)]
+    private Collection $hotels;
+
+    public function __construct()
+    {
+        $this->hotels = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -137,4 +147,39 @@ class Category
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Hotel>
+     */
+    public function getHotels(): Collection
+    {
+        return $this->hotels;
+    }
+
+    public function addHotel(Hotel $hotel): self
+    {
+        if (!$this->hotels->contains($hotel)) {
+            $this->hotels->add($hotel);
+            $hotel->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHotel(Hotel $hotel): self
+    {
+        if ($this->hotels->removeElement($hotel)) {
+            // set the owning side to null (unless already changed)
+            if ($hotel->getCategory() === $this) {
+                $hotel->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString()
+{
+    return $this->title; // Varsayılan olarak kategori adını döndürdüğümüzü varsayalım
+}
+
 }

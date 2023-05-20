@@ -1,9 +1,8 @@
 {% extends 'adminbase.html.twig' %}
 
-{% block title %}New Category{% endblock %}
+{% block title %}New Hotel{% endblock %}
 
 {% block body %}
-
       <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -42,11 +41,10 @@
         <div class="card-body">
 
 
-    {{ include('admin/category/_form.html.twig') }}
-
+    {{ include('admin/hotel/_form.html.twig') }}
     <hr>
     <div class="col-md-2">
-      <a href="{{ path('app_category_index') }}" class="btn btn-block btn-primary">back to list</a>
+      <a href="{{ path('app_admin_hotel_index') }}" class="btn btn-block btn-primary">back to list</a>
     </div>
 
 </div>
@@ -64,3 +62,4 @@
   <!-- /.content-wrapper -->
 
 {% endblock %}
+

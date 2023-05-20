@@ -1,9 +1,9 @@
 {% extends 'adminbase.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}Hotel{% endblock %}
 
 {% block body %}
-      <!-- Content Wrapper. Contains page content -->
+       <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -46,56 +46,83 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ category.id }}</td>
-            </tr>
-            <tr>
-                <th>Parentid</th>
-                <td>{{ category.parentid }}</td>
+                <td>{{ hotel.id }}</td>
             </tr>
             <tr>
                 <th>Title</th>
-                <td>{{ category.title }}</td>
+                <td>{{ hotel.title }}</td>
             </tr>
             <tr>
                 <th>Keywords</th>
-                <td>{{ category.keywords }}</td>
+                <td>{{ hotel.keywords }}</td>
             </tr>
             <tr>
                 <th>Description</th>
-                <td>{{ category.description }}</td>
+                <td>{{ hotel.description }}</td>
             </tr>
             <tr>
                 <th>Image</th>
-                <td><img src="{{ asset('uploads/images/' ~ category.image) }}" height="100"> </td>
+                <td><img src="{{ asset('uploads/images/' ~ hotel.image) }}" height="100"> </td>
+            </tr>
+            <tr>
+                <th>Star</th>
+                <td>{{ hotel.star }}</td>
+            </tr>
+            <tr>
+                <th>Adress</th>
+                <td>{{ hotel.adress }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ hotel.phone }}</td>
+            </tr>
+            <tr>
+                <th>Fax</th>
+                <td>{{ hotel.fax }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ hotel.email }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ hotel.city }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ hotel.country }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{ hotel.location }}</td>
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ category.status }}</td>
+                <td>{{ hotel.status }}</td>
             </tr>
             <tr>
                 <th>Created_at</th>
-                <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ hotel.createdAt ? hotel.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>Updated_at</th>
-                <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ hotel.updatedAt ? hotel.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
+    <hr>
+    <div class="col-md-2">
+      <a href="{{ path('app_admin_hotel_index') }}" class="btn btn-block btn-primary">back to list</a>
+    </div>
+    <hr>
+    <div class="col-md-2">
+      <a href="{{ path('app_admin_hotel_edit', {'id': hotel.id}) }}" class="btn btn-block btn-primary">edit</a>
+    </div>
 
     <hr>
     <div class="col-md-2">
-      <a href="{{ path('app_category_index') }}" class="btn btn-block btn-primary">back to list</a>
+      {{ include('admin/hotel/_delete_form.html.twig') }}
     </div>
-    <hr>
-    <div class="col-md-2">
-      <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-block btn-primary">edit</a>
-    </div>
-    <hr>
-    <div class="col-md-2">
-      {{ include('admin/category/_delete_form.html.twig') }}
-    </div>
-    
 
 
     </div>
