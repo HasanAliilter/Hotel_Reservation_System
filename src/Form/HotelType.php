@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Hotel;
 use App\Entity\Category;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -73,12 +74,18 @@ class HotelType extends AbstractType
             ])
 
             ->add('location')
+            ->add('detail', CKEditorType::class, array(
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                ),
+            ))
 
             ->add('status', ChoiceType::class, [
                 'choices' => [
                     'True' => 'True',
                     'False' => 'False'],
             ])
+            
         ;
     }
 

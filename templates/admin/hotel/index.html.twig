@@ -3,6 +3,9 @@
 {% block title %}Hotel index{% endblock %}
 
 {% block body %}
+    <SCRIPT language="JavaScript" type="text/javascript">
+        function openWin( windowURL, windowName, windowFeatures ) { window.open( windowURL, windowName, windowFeatures ) ; 	}
+    </SCRIPT>
 
       <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -55,6 +58,7 @@
                 <th>Email</th>
                 <th>City</th>
                 <th>Country</th>
+                <th>I.Gallery</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -70,6 +74,11 @@
                 <td>{{ hotel.email }}</td>
                 <td>{{ hotel.city }}</td>
                 <td>{{ hotel.country }}</td>
+                <td>
+                    <a href="javascript:openWin('{{ path('app_admin_image_new', {'id': hotel.id}) }}','','toolbar=no,location=no,directories=0,status=no,top=50,left=100,menuBar=no,scrollBars=yes,resizable=no,width=900,height=600');">
+                      <img src="{{ asset('assets/admin/img') }}/images.jpeg" height="40" title="İmage Gallery">
+                    </a>
+                </td>
                 <td>{{ hotel.status }}</td>
                 <td>
                     <a href="{{ path('app_admin_hotel_show', {'id': hotel.id}) }}" class="btn btn-block btn-primary">show</a>

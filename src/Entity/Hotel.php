@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\HotelRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
@@ -60,6 +63,17 @@ class Hotel
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $detail = null;
+
+    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Image::class)]
+    private Collection $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -257,5 +271,51 @@ class Hotel
 
         return $this;
     }
+
+    public function getDetail(): ?string
+    {
+        return $this->detail;
+    }
+
+    public function setDetail(?string $detail): self
+    {
+        $this->detail = $detail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setHotel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getHotel() === $this) {
+                $image->setHotel(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString()
+{
+    return $this->title; // Varsayılan olarak kategori adını döndürdüğümüzü varsayalım
+}
     
 }
