@@ -1,8 +1,8 @@
 {% extends 'homebase.html.twig' %}
 
-{% block title %}Best Online Hotel Reservation{% endblock %}
-{% block keywords %}holiday,vocation,book hotel,summer holiday,beach resort{% endblock %}
-{% block description %}You can find all Turkey best hotel{% endblock %}
+{% block title %}{{data.title}}{% endblock %}
+{% block keywords %}{{data.keywords}}{% endblock %}
+{% block description %}{{data.description}}{% endblock %}
 
 {% block slider %}{%include('home/slider.html.twig')%}{% endblock %}
 
