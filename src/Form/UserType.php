@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
@@ -21,8 +22,8 @@ class UserType extends AbstractType
             ->add('email')
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                    'Admin' => '["ROLE_ADMIN"]',
-                    'User' => '["ROLE_USER"]'],
+                    'Admin' => 'ROLE_ADMIN',
+                    'User' => 'ROLE_USER'],
             ])
             ->add('password', PasswordType::class, [
                 // instead of being set onto the object directly,
@@ -44,7 +45,7 @@ class UserType extends AbstractType
             ->add('name')
             ->add('surname')
             ->add('image', FileType::class, [
-                'label' => 'Hotel Main Image',
+                'label' => 'User Avatar',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
@@ -63,6 +64,16 @@ class UserType extends AbstractType
                     'False' => 'False'],
             ])
         ;
+        //roles field data transformer
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesArray) {
+                    return count($rolesArray)? $rolesArray[0]: null;
+                },
+                function ($rolesString) {
+                    return [$rolesString];
+                }
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

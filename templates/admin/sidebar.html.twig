@@ -8,15 +8,16 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{asset('assets')}}/admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <div class="image">
+                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">{{app.user.name}} {{app.user.surname}}</a>
+
+                <a href="{{ path('app_logout')}}">  Logout</a>
+            </div>
         </div>
-        <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
-        </div>
-      </div>
 
       <!-- SidebarSearch Form -->
       <div class="form-inline">
@@ -87,6 +88,32 @@
                 Hotels
               </p>
             </a>
+          </li>
+          <li class="nav-item">
+              <a href="/admin/user" class="nav-link">
+                  <i class="nav-icon fas fa-user-friends"></i>
+                  <p>
+                      Users
+                  </p>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a href="/admin/messages" class="nav-link">
+                  <i class="nav-icon fas fa-comment"></i>
+                  <p>
+                      Form Messages
+                  </p>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a href="/admin/comment" class="nav-link">
+                  <i class="nav-icon fas fa-user"></i>
+                  <p>
+                      User Comments
+                  </p>
+              </a>
           </li>
           <li class="nav-header">General</li>
           <li class="nav-item">
