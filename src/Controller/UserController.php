@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Repository\HotelRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -27,9 +28,14 @@ class UserController extends AbstractController
     }
 
     #[Route('/hotel', name: 'app_user_hotel', methods: ['GET'])]
-    public function hotels(): Response
+    public function hotels(HotelRepository $hotelRepository): Response
     {
-        return $this->render('user/hotels.html.twig');
+        /** @var User $user  */
+        $user = $this->getUser(); // Get login User data
+
+        return $this->render('user/hotels.html.twig', [
+            'hotels' => $hotelRepository->findBy(['userid'=>$user->getId()]),
+        ]);
     }
 
     #[Route('/reservations', name: 'app_user_reservations', methods: ['GET'])]
@@ -96,14 +102,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $loggedInUser  */
-            $loggedInUser = $this->getUser();
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
             
             $file = $form->get('image')->getData();
 

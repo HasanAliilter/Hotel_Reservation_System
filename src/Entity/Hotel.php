@@ -70,6 +70,9 @@ class Hotel
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Image::class)]
     private Collection $images;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $userid = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -283,6 +286,17 @@ class Hotel
 
         return $this;
     }
+    public function getUserid(): ?int
+    {
+        return $this->userid;
+    }
+
+    public function setUserid(?int $userid): self
+    {
+        $this->userid = $userid;
+
+        return $this;
+    }
 
     /**
      * @return Collection<int, Image>
@@ -317,5 +331,6 @@ class Hotel
 {
     return $this->title; // Varsayılan olarak kategori adını döndürdüğümüzü varsayalım
 }
+
     
 }

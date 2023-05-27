@@ -14,8 +14,8 @@
                 <div class="span8">
                     <ul class="breadcrumb">
                         <li><a href="#"><i class="icon-home"></i></a><i class="icon-angle-right"></i></li>
-                        <li><a href="#">Blog</a><i class="icon-angle-right"></i></li>
-                        <li class="active">Blog with left sidebar</li>
+                        <li><a href="/user">User</a><i class="icon-angle-right"></i></li>
+                        <li class="active">User Hotel List</li>
                     </ul>
                 </div>
                 <div class="span4">
@@ -40,7 +40,7 @@
                     <article class="blog-post">
                         <div class="post-heading">
                             <h3><a href="#">User Hotel List</a></h3>
-                            <a href="{{ path('user_hotel_new') }}" class="btn btn-block btn-success" >Add New Hotel</a>
+                            <a href="{{ path('app_user_hotel_new') }}" class="btn btn-block btn-success" >Add New Hotel</a>
                         </div>
                         <div class="row">
                             <div class="span8">
@@ -54,8 +54,6 @@
                                         <th>Star</th>
 
                                         <th>City</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
                                         <th>Country</th>
 
                                         <th>I.Gallery</th>
@@ -69,31 +67,28 @@
                                             <td >{{ hotel.id }}</td>
                                             <td nowrap>{{ hotel.title }}</td>
                                             <td>
-                                                <img src="{{ asset('uploads/images/' ~ hotel.image) }}" height="40">  </td>
+                                                <img src="{{ asset('uploads/images/' ~ hotel.image) }}" style="height: 30px">  </td>
                                             <td>{{ hotel.star }}</td>
 
                                             <td>{{ hotel.city }}</td>
-                                            <td>{{ hotel.phone }}</td>
-                                            <td>{{ hotel.email }}</td>
-
-                                            <td>{{ hotel.country }}</td>
+                                             <td>{{ hotel.country }}</td>
 
                                             <td>
-                                                <a href="javascript:openWin('{{ path('admin_image_new', {'id': hotel.id}) }}','','toolbar=no,location=no,directories=0,status=no,top=50,left=100,menuBar=no,scrollBars=yes,resizable=no,width=900,height=600');">
-                                                    <img src="{{ asset('assets/admin/img') }}/gallery.png" height="40">
+                                                <a href="javascript:openWin('{{ path('app_user_image_new', {'id': hotel.id}) }}','','toolbar=no,location=no,directories=0,status=no,top=50,left=100,menuBar=no,scrollBars=yes,resizable=no,width=900,height=600');">
+                                                    <img src="{{ asset('assets/admin/img') }}/images.jpeg" style="height: 30px">
                                                 </a>
                                             </td>
 
                                             <td>{{ hotel.status }}</td>
 
                                             <td>
-                                                <a href="{{ path('admin_hotel_show', {'id': hotel.id}) }}" class="btn btn-block btn-info">Show</a>
+                                                <a href="{{ path('app_user_hotel_show', {'id': hotel.id}) }}" class="btn btn-theme">Show</a>
                                             </td>
                                             <td>
-                                                <a href="{{ path('admin_hotel_edit', {'id': hotel.id}) }}" class="btn btn-block btn-info">Edit</a>
+                                                <a href="{{ path('app_user_hotel_edit', {'id': hotel.id}) }}" class="btn btn-success">Edit</a>
                                             </td>
                                             <td>
-                                                {{ include('admin/hotel/_delete_form.html.twig') }}
+                                                {{ include('hotel/_delete_form.html.twig') }}
                                             </td>
                                         </tr>
                                     {% else %}
