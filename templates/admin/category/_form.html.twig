@@ -48,8 +48,9 @@
                     <option> False </option>
                 </select>
             </div>
-            <input type="hidden" id="category__token" name="category[_token]" value="63c2208a73989f73f5fb8c6.trrP8vT7M1HsDpuC_ZvEHkgLJwmG9kpdCI92LhFiV_g.xtaFmry-RAi5eaP7yvKdVBdUfj7rpgtsWr0DGTw4D8zd1oWeha9rNrRXyg" />
-
+                <input type="hidden" name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+            >
         </div>
         <!-- /.card-body -->
 

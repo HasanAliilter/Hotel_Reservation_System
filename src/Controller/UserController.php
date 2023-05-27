@@ -15,11 +15,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(): Response
     {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
+        return $this->render('user/show.html.twig');
+    }
+
+    #[Route('/comments', name: 'app_user_comments', methods: ['GET'])]
+    public function comments(): Response
+    {
+        return $this->render('user/comments.html.twig');
+    }
+
+    #[Route('/hotel', name: 'app_user_hotel', methods: ['GET'])]
+    public function hotels(): Response
+    {
+        return $this->render('user/hotels.html.twig');
+    }
+
+    #[Route('/reservations', name: 'app_user_reservations', methods: ['GET'])]
+    public function reservations(): Response
+    {
+        return $this->render('user/reservations.html.twig');
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
@@ -67,13 +83,21 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function edit(Request $request,$id, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        /** @var User $user  */
+        $user = $this->getUser(); // Get login User data
+        if ($user->getId() != $id)
+        {
+            return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            /** @var User $loggedInUser  */
+            $loggedInUser = $this->getUser();
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
