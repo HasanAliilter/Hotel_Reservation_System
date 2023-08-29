@@ -6,6 +6,7 @@ use App\Entity\Hotel;
 use App\Entity\Admin\Messages;
 use App\Form\Admin\MessagesType;
 use App\Repository\HotelRepository;
+use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Admin\SettingRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,20 +19,27 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(SettingRepository $settingRepository,HotelRepository $hotelRepository): Response
     {
-        $data = $settingRepository->findOneBy(['id' => 1]);
+        $setting=$settingRepository->findAll();
         $slider=$hotelRepository->findBy(['status'=>'True'],['title'=>'ASC'] ,4);
+        $hotels=$hotelRepository->findBy(['status'=>'True'],['title'=>'DESC'] ,4);
+        $newhotels=$hotelRepository->findBy(['status'=>'True'],['title'=>'DESC'] ,10);
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'data' => $data,
-            'slider'=>$slider
+            'setting' => $setting,
+            'slider'=>$slider,
+            'hotels'=>$hotels,
+            'newhotels'=>$newhotels,
         ]);
     }
     
     #[Route('/hotel/{id}', name: 'hotel_show', methods: ['GET'])]
-    public function show(Hotel $hotel,): Response
+    public function show(Hotel $hotel,$id,ImageRepository $imageRepository): Response
     {
+        $images=$imageRepository->findBy(['hotel'=>$id]);
+
         return $this->render('home/hotelShow.html.twig', [
             'hotel' => $hotel,
+            'images' => $images,
         ]);
     }
 
