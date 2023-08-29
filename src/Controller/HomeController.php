@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Hotel;
+use App\Entity\Admin\Messages;
+use App\Form\Admin\MessagesType;
 use App\Repository\HotelRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Admin\SettingRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,12 +44,30 @@ class HomeController extends AbstractController
 
         ]);
     }
-
-    #[Route('/contact', name: 'home_contact', methods: ['GET',"POST"])]
-    public function contact(SettingRepository $settingRepository): Response
+    
+    #[Route('/contact', name: 'home_contact', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, SettingRepository $settingRepository): Response
     {
+        $message = new Messages();
+        $form = $this->createForm(MessagesType::class, $message);
+        $form->handleRequest($request);
+        $submittedToken = $request->request->get('token');
         $setting=$settingRepository->findAll();
+
+        if ($form->isSubmitted()) {
+            if ($this->isCsrfTokenValid('form-message', $submittedToken)) {
+                $message->setStatus('New');
+                $message->setIp($_SERVER['REMOTE_ADDR']);
+                $entityManager->persist($message);
+                $entityManager->flush();
+                $this->addFlash('success', 'Your message has been sent successfuly');
+
+                return $this->redirectToRoute('home_contact', [], Response::HTTP_SEE_OTHER);
+            }
+        }
+
         return $this->render('home/contact.html.twig', [
+            'form' => $form,
             'setting'=>$setting,
         ]);
     }
