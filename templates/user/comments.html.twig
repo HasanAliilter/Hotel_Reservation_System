@@ -39,9 +39,44 @@
                             <h3><a href="#">User Comments List</a></h3>
                         </div>
                         <div class="row">
-                            <div class="span8">
-                                
-                            </div>
+
+
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+
+                                        <th>Subject</th>
+                                        <th>Comment</th>
+                                        <th>Status</th>
+                                        <th>Hotel</th>
+                                        <th>Created_at</th>
+                                        <th>Rate</th>
+                                        <th>actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for comment in comments %}
+                                        <tr>
+
+                                            <td>{{ comment.subject }}</td>
+                                            <td>{{ comment.comment }}</td>
+                                            <td>{{ comment.status }}</td>
+                                            <td nowrap><a href="{{ path('hotel_show', {'id': comment.hotelid}) }}">{{ comment.title }}</a></td>
+                                            <td>{{ comment.created_at }}</td>
+                                            <td>{{ comment.rate }}</td>
+                                            <td>
+                                                {{ include('admin/comment/_delete_form.html.twig') }}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="10">no records found</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+
                         </div>
                     </article>
                     <!-- end article 1 -->

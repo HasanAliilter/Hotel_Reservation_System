@@ -114,6 +114,9 @@
                                         <th>Fax</th>
                                         <td>{{ hotel.fax }}</td>
                                     </tr>
+
+
+
                                     </tbody>
                                 </table>
 
@@ -124,6 +127,78 @@
 
                 </div>
             </div>
+            <div class="row">
+                <div class="tabbable tabs-top">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#three" data-toggle="tab">Comments</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="one">
+
+                            
+
+                        </div>
+                        <div class="tab-pane" id="two">
+                            <p>
+                                {{ hotel.detail |raw  }}
+                            </p>
+                        </div>
+                        <div class="tab-pane" id="three">
+
+                            {% for rs in comments %}
+                                <h5>{{ rs.subject }}  [Rate :{{ rs.rate }}]</h5>
+                                <p>
+                                    {{ rs.comment }}
+                                </p>
+                                <hr>
+                            {% endfor %}
+
+                            {% if app.user %}
+                            <h4>Wirte your comment  </h4>
+                            {{ include('messages.html.twig') }}
+
+                            <form name="comment" action="{{ path('user_new_comment', {'id': hotel.id}) }}" method="post" role="form" class="contactForm">
+                                <div class="row">
+
+                                    <div class="span7 form-group">
+                                        <input type="text" class="input-block-level" id="comment_subject" name="comment[subject]" maxlength="75" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                                        <div class="validation"></div>
+                                    </div>
+
+                                    <div class="span7 form-group">
+                                        <textarea class="input-block-level" id="comment_comment" name="comment[comment]" maxlength="255" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Comment"></textarea>
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="span2 form-group">
+                                        <select id="comment_rate" name="comment[rate]" class="input-block-level">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>s
+                                            <option>5</option>
+                                        </select>
+                                        <div class="validation"></div>
+                                        <input type="hidden" name="token" value="{{ csrf_token('comment') }}" />
+                                        <button class="btn btn-theme" type="submit">Send Comment</button>
+                                    </div>
+
+
+                                </div>
+
+                            </form>
+                            {% else %}
+                                <li>
+                                    <a href="/loginuser"><i class="icon-envelope-alt"></i> If you want to add comment please login</a>
+                                </li>
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end tab -->
+            </div>
+
         </div>
     </section>
 

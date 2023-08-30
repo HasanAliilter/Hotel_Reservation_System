@@ -8,6 +8,7 @@ use App\Form\Admin\MessagesType;
 use App\Repository\HotelRepository;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\Admin\CommentRepository;
 use App\Repository\Admin\SettingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +34,14 @@ class HomeController extends AbstractController
     }
     
     #[Route('/hotel/{id}', name: 'hotel_show', methods: ['GET'])]
-    public function show(Hotel $hotel,$id,ImageRepository $imageRepository): Response
+    public function show(Hotel $hotel,$id,ImageRepository $imageRepository, CommentRepository $commentRepository): Response
     {
         $images=$imageRepository->findBy(['hotel'=>$id]);
-
+        $comments=$commentRepository->findBy(['hotelid'=>$id, 'status'=>'True']);
         return $this->render('home/hotelShow.html.twig', [
             'hotel' => $hotel,
             'images' => $images,
+            'comments' => $comments,
         ]);
     }
 
