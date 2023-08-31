@@ -6,12 +6,16 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Entity\Admin\Comment;
 use App\Form\Admin\CommentType;
+use App\Entity\Admin\Reservation;
 use App\Repository\UserRepository;
+use App\Form\Admin\ReservationType;
 use App\Repository\HotelRepository;
+use App\Repository\Admin\RoomRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Admin\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\Admin\ReservationRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -48,10 +52,26 @@ class UserController extends AbstractController
     }
 
     #[Route('/reservations', name: 'app_user_reservations', methods: ['GET'])]
-    public function reservations(): Response
+    public function reservations(ReservationRepository $reservationRepository): Response
     {
-        return $this->render('user/reservations.html.twig');
+        /** @var User $user  */
+        $user = $this->getUser();
+        $reservations=$reservationRepository->getUserReservation($user->getId());
+        return $this->render('user/reservations.html.twig', [
+            'reservations' =>$reservations,
+            ]);
     }
+
+    #[Route('/reservation/{id}', name: 'user_reservation_show', methods: ['GET'])]
+    public function reservationshow($id,ReservationRepository $reservationRepository): Response
+    {
+        $user = $this->getUser();
+        $reservation=$reservationRepository->getReservation($id);
+        return $this->render('user/reservation_show.html.twig', [
+            'reservation' =>$reservation,
+        ]);
+    }
+
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
@@ -170,6 +190,64 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('hotel_show', ['id'=> $id]);
+    }
+
+    #[Route('/reservation/{hid}/{rid}', name: 'user_reservation_new', methods: ['GET','POST'])]
+    public function newreservation(Request $request,$hid,$rid,HotelRepository $hotelRepository, RoomRepository $roomRepository, EntityManagerInterface $entityManager): Response
+    {
+
+        $hotel=$hotelRepository->findOneBy(['id'=>$hid]);
+        $room=$roomRepository->findOneBy(['id'=>$rid]);
+
+        $days=$_REQUEST["days"];
+        $checkin=$_REQUEST["checkin"];
+        $checkout= Date("Y-m-d H:i:s", strtotime($checkin ." $days Day"));
+        $checkin= Date("Y-m-d H:i:s", strtotime($checkin ." 0 Day"));
+
+        $data["total"]=$days * $room->getPrice();
+        $data["days"]=$days;
+        $data["checkin"]=$checkin;
+        $data["checkout"]=$checkout;
+
+        $reservation = new Reservation();
+        $form = $this->createForm(ReservationType::class, $reservation);
+        $form->handleRequest($request);
+
+
+        $submittedToken = $request->request->get('token');
+        if ($form->isSubmitted()) {
+            if ($this->isCsrfTokenValid('form-reservation', $submittedToken)) {
+
+                $checkin=date_create_from_format("Y-m-d H:i:s",$checkin); //Convert to datetime format
+                $checkout=date_create_from_format("Y-m-d H:i:s",$checkout); //Convert to datetime format
+                $reservation->setCheckin($checkin);
+                $reservation->setCheckout($checkout);
+                $reservation->setStatus('New');
+                $reservation->setIp($_SERVER['REMOTE_ADDR']);
+                $reservation->setHotelid($hid);
+                $reservation->setRoomid($rid);
+                /** @var User $user  */
+                $user = $this->getUser();
+                $reservation->setUserid($user->getId());
+                $reservation->setDays($days);
+                $reservation->setTotal($data["total"]);
+                $reservation->setCreatedAt(new \DateTimeImmutable());
+
+                $entityManager->persist($reservation);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_user_reservations');
+            }
+        }
+
+
+        return $this->render('user/newreservation.html.twig', [
+            'reservation' => $reservation,
+            'room' => $room,
+            'hotel' => $hotel,
+            'data' => $data,
+            'form' => $form->createView(),
+        ]);
     }
 
 }
